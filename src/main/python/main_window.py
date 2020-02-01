@@ -178,9 +178,10 @@ class MainWindow(QMainWindow):
 
     def video_url_lineEdit_finished(self):
         """
-        holt meta informationen für das video
-        :return:
-        :rtype:
+        fetches meta information of the video
+
+        :return: None
+        :rtype: None
         """
         url = youtube_dl.utils.url_or_none(self.video_url_lineEdit.text())
         if url is not None:

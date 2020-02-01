@@ -3,14 +3,28 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 
 class DownloadVideoThread(QThread):
+    """
+    Thread for downloading task
+    Let the UI feel responsive while doing work :P
+    """
+
     url = ""
     download_progress = pyqtSignal(dict)
     format = None
 
     def __init__(self):
+        """
+        init the parent model
+        """
         QThread.__init__(self)
 
     def __del__(self):
+        """
+        stops the thread
+
+        :return: None
+        :rtype: None
+        """
         self.wait()
 
     def progress(self, progress):
@@ -26,9 +40,10 @@ class DownloadVideoThread(QThread):
 
     def run(self):
         """
+        Will be executed while the thread runs
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
         if self.url is not None:
             download_options = {
