@@ -1,5 +1,5 @@
 youtube_dl==2020.1.15
 PyQt5==5.13.1
-PyInstaller>=3.6
+PyInstaller==3.4
 fbs==0.8.4
 PyGithub==1.45
