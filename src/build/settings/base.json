@@ -1,9 +1,0 @@
-{
-  "app_name": "PyTDownloader",
-  "author": "LXKennstenich",
-  "main_module": "src/main/python/main.py",
-  "version": "1.0.0",
-  "description": "Simple GUI for youtube-dl. Written in Python with PyQt5",
-  "author_email": "contact@alexweese.de",
-  "url": "https://github.com/LXkennstenich/PyTDownloader"
-}

@@ -38,6 +38,10 @@ class DownloadVideoThread(QThread):
         """
         self.download_progress.emit(progress)
 
+    def generate_output_template(self):
+        # '/var/www/html/media/audio/%(title)s.%(ext)s'
+        pass
+
     def run(self):
         """
         Will be executed while the thread runs
@@ -47,6 +51,7 @@ class DownloadVideoThread(QThread):
         """
         if self.url is not None:
             download_options = {
+                'outtmpl': self.generate_output_template(),
                 'format': self.format
             }
             with youtube_dl.YoutubeDL(download_options) as ydl:

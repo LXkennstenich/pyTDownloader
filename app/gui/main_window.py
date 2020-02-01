@@ -2,9 +2,9 @@ from __future__ import unicode_literals
 from PyQt5 import QtWidgets, QtCore
 import youtube_dl
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
-from downloadvideothread import DownloadVideoThread
-from github_api import GithubApi
-from info_thread import Info_Thread
+from app.models.downloadvideothread import DownloadVideoThread
+from app.models.github_api import GithubApi
+from app.models.info_thread import Info_Thread
 
 
 class MainWindow(QMainWindow):

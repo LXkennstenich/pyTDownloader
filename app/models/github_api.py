@@ -26,6 +26,5 @@ class GithubApi:
                             self.last_release = str(release.tag_name)
                             self.release_url = str(release.html_url)
                             return True
-        except Exception as error:
-            print(error)
+        except Exception:
             return False
