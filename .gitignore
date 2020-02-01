@@ -1,2 +1,3 @@
 /target/
 /venv/
+/src/build/settings/secret.json

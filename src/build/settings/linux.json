@@ -1,6 +1,6 @@
 {
     "categories": "Utility;",
-    "description": "",
-    "author_email": "",
-    "url": ""
+    "description": "Simple GUI for youtube-dl. Written in Python with PyQt5",
+    "author_email": "contact@alexweese.de",
+    "url": "https://github.com/LXkennstenich/PyTDownloader"
 }

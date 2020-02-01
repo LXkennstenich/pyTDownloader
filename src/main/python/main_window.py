@@ -1,10 +1,9 @@
 from __future__ import unicode_literals
-import os
-from PyQt5 import uic, QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore
 import youtube_dl
-from PyQt5.QtWidgets import QMainWindow
-
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from download_video_thread import Download_Video_Thread
+from github_api import GithubApi
 from info_thread import Info_Thread
 
 
@@ -16,6 +15,39 @@ class MainWindow(QMainWindow):
 
     quality_info_items = []
     url = None
+
+    def __init__(self):
+        """
+
+        """
+        super(MainWindow, self).__init__()
+        self.setupUi(self)
+        self.completed_downloads_listWidget = self.findChild(QtWidgets.QListWidget, "completed_downloads_listWidget")
+        self.current_download_label = self.findChild(QtWidgets.QLabel, "current_download_label")
+        self.download_speed_label = self.findChild(QtWidgets.QLabel, "download_speed_label")
+        self.download_size_label = self.findChild(QtWidgets.QLabel, "download_size_label")
+        self.download_pushButton = self.findChild(QtWidgets.QPushButton, "download_pushButton")
+        self.progressBar = self.findChild(QtWidgets.QProgressBar, "progressBar")
+        self.quality_comboBox = self.findChild(QtWidgets.QComboBox, "quality_comboBox")
+        self.video_url_lineEdit = self.findChild(QtWidgets.QLineEdit, "video_url_lineEdit")
+        self.video_url_lineEdit.textChanged.connect(self.video_url_lineEdit_finished)
+        self.download_pushButton.clicked.connect(self.download_pushButton_clicked)
+        self.info_thread = Info_Thread()
+        self.info_thread.add_quality_item.connect(self.add_quality_item)
+        self.info_thread.finished.connect(self.info_thread_finished)
+        self.download_video_thread = Download_Video_Thread()
+        self.download_video_thread.download_progress.connect(self.download_progress)
+        self.download_video_thread.finished.connect(self.download_finished)
+        self.progressBar.setValue(0)
+        self.current_download_label.setText("")
+        self.download_speed_label.setText("")
+        self.download_size_label.setText("")
+        self.download_pushButton.setEnabled(False)
+        self.github_api = GithubApi()
+        if self.github_api.update_available() is True:
+            QMessageBox.information(self, "Test",
+                                    "Es ist eine neue Version verfügbar: {0} <a href='{1}'>Zum Download</a>".format(
+                                        self.github_api.last_release, self.github_api.release_url))
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -64,7 +96,6 @@ class MainWindow(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -78,34 +109,6 @@ class MainWindow(QMainWindow):
         self.current_download_label_2.setText(_translate("MainWindow", "Videos:"))
         self.download_speed_label.setText(_translate("MainWindow", "TextLabel"))
         self.download_size_label.setText(_translate("MainWindow", "TextLabel"))
-
-    def __init__(self):
-        """
-
-        """
-        super(MainWindow, self).__init__()
-        self.setupUi(self)
-        self.completed_downloads_listWidget = self.findChild(QtWidgets.QListWidget, "completed_downloads_listWidget")
-        self.current_download_label = self.findChild(QtWidgets.QLabel, "current_download_label")
-        self.download_speed_label = self.findChild(QtWidgets.QLabel, "download_speed_label")
-        self.download_size_label = self.findChild(QtWidgets.QLabel, "download_size_label")
-        self.download_pushButton = self.findChild(QtWidgets.QPushButton, "download_pushButton")
-        self.progressBar = self.findChild(QtWidgets.QProgressBar, "progressBar")
-        self.quality_comboBox = self.findChild(QtWidgets.QComboBox, "quality_comboBox")
-        self.video_url_lineEdit = self.findChild(QtWidgets.QLineEdit, "video_url_lineEdit")
-        self.video_url_lineEdit.textChanged.connect(self.video_url_lineEdit_finished)
-        self.download_pushButton.clicked.connect(self.download_pushButton_clicked)
-        self.info_thread = Info_Thread()
-        self.info_thread.add_quality_item.connect(self.add_quality_item)
-        self.info_thread.finished.connect(self.info_thread_finished)
-        self.download_video_thread = Download_Video_Thread()
-        self.download_video_thread.download_progress.connect(self.download_progress)
-        self.download_video_thread.finished.connect(self.download_finished)
-        self.progressBar.setValue(0)
-        self.current_download_label.setText("")
-        self.download_speed_label.setText("")
-        self.download_size_label.setText("")
-        self.download_pushButton.setEnabled(False)
 
     def download_progress(self, progress_dict):
         """
@@ -135,8 +138,8 @@ class MainWindow(QMainWindow):
     def info_thread_finished(self):
         """
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
         self.quality_info_items = list(dict.fromkeys(self.quality_info_items))
         self.quality_info_items.sort()
@@ -176,6 +179,7 @@ class MainWindow(QMainWindow):
         :rtype:
         """
         if self.url is not None:
+            self.progressBar.setValue(0)
             self.download_video_thread.format = self.quality_comboBox.currentData()
             self.download_video_thread.url = self.url
             self.download_video_thread.start()
