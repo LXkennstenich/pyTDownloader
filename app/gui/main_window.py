@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+import os
+import webbrowser
 from PyQt5 import QtWidgets, QtCore
 import youtube_dl
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
@@ -45,6 +47,8 @@ class MainWindow(QMainWindow):
         self.download_speed_label.setText("")
         self.download_size_label.setText("")
         self.download_pushButton.setEnabled(False)
+        self.completed_downloads_listWidget.itemDoubleClicked.connect(self.list_item_clicked)
+        self.update_completed_download_list()
         self.github_api = GithubApi()
         if self.github_api.update_available() is True:
             QMessageBox.information(self, "Update verfügbar",
@@ -139,14 +143,25 @@ class MainWindow(QMainWindow):
             self.download_speed_label.setText(progress_dict["_speed_str"])
             self.download_size_label.setText(progress_dict["_total_bytes_str"])
 
+    def update_completed_download_list(self):
+        for entry in os.scandir(os.curdir + '/PyTDownloader'):
+            if entry.is_file():
+                list_item = QtWidgets.QListWidgetItem()
+                list_item.setText(entry.name)
+                list_item.setToolTip("Klicken um zu Datei zu springen")
+                self.completed_downloads_listWidget.addItem(list_item)
+
+    def list_item_clicked(self, item):
+        webbrowser.open('file://' + os.path.abspath('./PyTDownloader/'))
+
     def download_finished(self):
         """
         Fires when the download has finished
-        :todo: multilanguage implementation ?
 
         :return: None
         :rtype: None
         """
+        self.update_completed_download_list()
         self.current_download_label.setText("Download abgeschlossen")
 
     def info_thread_finished(self):
