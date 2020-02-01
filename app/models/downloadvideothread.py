@@ -39,6 +39,7 @@ class DownloadVideoThread(QThread):
         :rtype: None
         """
         self.download_progress.emit(progress)
+        return True
 
     def generate_output_template(self):
         return os.curdir + '/PyTDownloader/%(title)s.%(ext)s'

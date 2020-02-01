@@ -144,6 +144,12 @@ class MainWindow(QMainWindow):
             self.download_size_label.setText(progress_dict["_total_bytes_str"])
 
     def update_completed_download_list(self):
+        """
+        scans the pyTDownloader directory for videos and appends it to our listwidget
+
+        :return: None
+        :rtype: None
+        """
         if os.path.isdir(os.curdir + '/PyTDownloader') is False:
             os.mkdir(os.curdir + '/PyTDownloader')
 
@@ -211,9 +217,12 @@ class MainWindow(QMainWindow):
 
     def download_pushButton_clicked(self):
         """
+        resets the progressbar value
+        sets the quality format for the video
+        sets the youtube url
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
         if self.url is not None:
             self.progressBar.setValue(0)
