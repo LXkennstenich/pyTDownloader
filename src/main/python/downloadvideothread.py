@@ -2,7 +2,7 @@ import youtube_dl
 from PyQt5.QtCore import QThread, pyqtSignal
 
 
-class Download_Video_Thread(QThread):
+class DownloadVideoThread(QThread):
     url = ""
     download_progress = pyqtSignal(dict)
     format = None

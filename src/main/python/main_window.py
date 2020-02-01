@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from PyQt5 import QtWidgets, QtCore
 import youtube_dl
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
-from download_video_thread import Download_Video_Thread
+from downloadvideothread import DownloadVideoThread
 from github_api import GithubApi
 from info_thread import Info_Thread
 
@@ -18,6 +18,8 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         """
+        Initialize our object fields
+        setting default values for the widgets and checks for updates at start
 
         """
         super(MainWindow, self).__init__()
@@ -35,7 +37,7 @@ class MainWindow(QMainWindow):
         self.info_thread = Info_Thread()
         self.info_thread.add_quality_item.connect(self.add_quality_item)
         self.info_thread.finished.connect(self.info_thread_finished)
-        self.download_video_thread = Download_Video_Thread()
+        self.download_video_thread = DownloadVideoThread()
         self.download_video_thread.download_progress.connect(self.download_progress)
         self.download_video_thread.finished.connect(self.download_finished)
         self.progressBar.setValue(0)
@@ -45,11 +47,19 @@ class MainWindow(QMainWindow):
         self.download_pushButton.setEnabled(False)
         self.github_api = GithubApi()
         if self.github_api.update_available() is True:
-            QMessageBox.information(self, "Test",
+            QMessageBox.information(self, "Update verfügbar",
                                     "Es ist eine neue Version verfügbar: {0} <a href='{1}'>Zum Download</a>".format(
                                         self.github_api.last_release, self.github_api.release_url))
 
     def setupUi(self, MainWindow):
+        """
+        Initialize our widgets for the mainwindow
+
+        :param MainWindow: the mainwindow
+        :type MainWindow: MainWindow
+        :return: None
+        :rtype: None
+        """
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1095, 738)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -112,11 +122,13 @@ class MainWindow(QMainWindow):
 
     def download_progress(self, progress_dict):
         """
+        Managaging the download progress for us.
+        It set the label and progressbar values.
 
-        :param progress:
-        :type progress:
-        :return:
-        :rtype:
+        :param progress: the progress dictionary
+        :type progress: dict
+        :return: None
+        :rtype: None
         """
         if "_percent_str" in progress_dict:
             percent = progress_dict["_percent_str"]
@@ -129,14 +141,17 @@ class MainWindow(QMainWindow):
 
     def download_finished(self):
         """
+        Fires when the download has finished
+        :todo: multilanguage implementation ?
 
-        :return:
-        :rtype:
+        :return: None
+        :rtype: None
         """
         self.current_download_label.setText("Download abgeschlossen")
 
     def info_thread_finished(self):
         """
+        Fires when the info thread has finished
 
         :return: None
         :rtype: None
@@ -150,11 +165,14 @@ class MainWindow(QMainWindow):
 
     def add_quality_item(self, string, user_data):
         """
+        Adds a quality item to our list
 
-        :param string:
-        :type string:
-        :return:
-        :rtype:
+        :param string: the text for the combobox item
+        :type string: string
+        :param user_data: the id of the quality format
+        :type user_data: string
+        :return: None
+        :rtype: None
         """
         self.quality_info_items.append((string, user_data))
 
