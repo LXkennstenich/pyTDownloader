@@ -161,6 +161,15 @@ class MainWindow(QMainWindow):
                 self.completed_downloads_listWidget.addItem(list_item)
 
     def list_item_clicked(self, item):
+        """
+        gets fired when a list item is doubled clicked
+        opens the explorer in the pyTDownload directory
+
+        :param item: The QListWidgetItem
+        :type item: QtWidgets.QListWidgetItem
+        :return: None
+        :rtype: None
+        """
         webbrowser.open('file://' + os.path.abspath('./PyTDownloader/'))
 
     def download_finished(self):

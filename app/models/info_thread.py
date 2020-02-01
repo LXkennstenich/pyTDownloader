@@ -3,16 +3,38 @@ import youtube_dl
 
 
 class Info_Thread(QThread):
+    """
+    thread for fetching information about a video
+
+    """
+    
     url = ""
     add_quality_item = pyqtSignal(str, str)
 
     def __init__(self):
+        """
+        init function
+
+        """
         QThread.__init__(self)
 
     def __del__(self):
+        """
+        stops the thread
+
+        :return: None
+        :rtype: None
+        """
         self.wait()
 
     def run(self):
+        """
+        fetches information about the video and creates listwidget-items and emits a
+        signal to tell the mainwindow to add the item to the listwidget
+
+        :return: None
+        :rtype: None
+        """
         info_list = []
         download_options = {
             'quiet': True  # disable verbose output in console

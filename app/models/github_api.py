@@ -2,16 +2,30 @@ from github import Github
 
 
 class GithubApi:
+    """
+    class for interacting with the github api
+
+    """
     base_url = "https://api.github.com"
     version = "1.0.2"
 
     def __init__(self):
+        """
+        init function
+
+        """
         self.github = Github(base_url=self.base_url)
         self.last_release = None
         self.release_url = None
         self.repo = None
 
     def update_available(self):
+        """
+        checks if there is a new release in the repository
+
+        :return: True if there is a update otherwise False
+        :rtype: bool
+        """
         try:
             self.repo = self.github.get_repo("LXkennstenich/pyTDownloader")
             paginated_list = self.repo.get_releases()
