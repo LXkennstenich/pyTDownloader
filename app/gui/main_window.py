@@ -144,6 +144,9 @@ class MainWindow(QMainWindow):
             self.download_size_label.setText(progress_dict["_total_bytes_str"])
 
     def update_completed_download_list(self):
+        if os.path.isdir(os.curdir + '/PyTDownloader') is False:
+            os.mkdir(os.curdir + '/PyTDownloader')
+
         for entry in os.scandir(os.curdir + '/PyTDownloader'):
             if entry.is_file():
                 list_item = QtWidgets.QListWidgetItem()
