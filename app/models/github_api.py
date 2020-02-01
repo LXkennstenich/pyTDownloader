@@ -3,7 +3,7 @@ from github import Github
 
 class GithubApi:
     base_url = "https://api.github.com"
-    version = "1.0.0"
+    version = "1.0.2"
 
     def __init__(self):
         self.github = Github(base_url=self.base_url)
