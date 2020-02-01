@@ -14,7 +14,10 @@ class Info_Thread(QThread):
 
     def run(self):
         info_list = []
-        with youtube_dl.YoutubeDL() as ydl:
+        download_options = {
+            'quiet': True  # disable verbose output in console
+        }
+        with youtube_dl.YoutubeDL(download_options) as ydl:
             info_list = ydl.extract_info(self.url, download=False)
 
         for key in info_list:

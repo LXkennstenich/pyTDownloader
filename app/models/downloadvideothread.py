@@ -1,3 +1,5 @@
+import os
+
 import youtube_dl
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -39,8 +41,7 @@ class DownloadVideoThread(QThread):
         self.download_progress.emit(progress)
 
     def generate_output_template(self):
-        # '/var/www/html/media/audio/%(title)s.%(ext)s'
-        pass
+        return os.curdir + '/PyTDownloader/%(title)s.%(ext)s'
 
     def run(self):
         """
@@ -52,6 +53,7 @@ class DownloadVideoThread(QThread):
         if self.url is not None:
             download_options = {
                 'outtmpl': self.generate_output_template(),
+                'quiet': True,
                 'format': self.format
             }
             with youtube_dl.YoutubeDL(download_options) as ydl:

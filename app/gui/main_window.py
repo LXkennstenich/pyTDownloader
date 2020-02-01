@@ -9,7 +9,7 @@ from app.models.info_thread import Info_Thread
 
 class MainWindow(QMainWindow):
     """
-    Hauptfenster
+    Mainwindow where currently all interactions taking place
 
     """
 
