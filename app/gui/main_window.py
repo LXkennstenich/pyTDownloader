@@ -128,11 +128,11 @@ class MainWindow(QMainWindow):
         self.download_size_label.setText(_translate("MainWindow", ""))
 
     def crawl_files(self):
-        if os.path.isdir(os.curdir + '/PyQt_YTDownloader') is False:
-            os.mkdir(os.curdir + '/PyQt_YTDownloader')
+        if os.path.isdir(os.curdir + '/PyQt_YTDownloader_Videos') is False:
+            os.mkdir(os.curdir + '/PyQt_YTDownloader_Videos')
 
         self.files.clear()
-        for entry in os.scandir(os.curdir + '/PyQt_YTDownloader'):
+        for entry in os.scandir(os.curdir + '/PyQt_YTDownloader_Videos'):
             self.files.append(entry)
 
     def sync_files(self, file_list):
@@ -189,7 +189,7 @@ class MainWindow(QMainWindow):
         :return: None
         :rtype: None
         """
-        webbrowser.open('file://' + os.path.abspath('./PyQt_YTDownloader/'))
+        webbrowser.open('file://' + os.path.abspath('./PyQt_YTDownloader_Videos/'))
 
     def download_finished(self):
         """
