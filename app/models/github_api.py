@@ -7,7 +7,7 @@ class GithubApi:
 
     """
     base_url = "https://api.github.com"
-    version = "1.0.2"
+    version = "1.0.3"
 
     def __init__(self):
         """
