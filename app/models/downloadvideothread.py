@@ -13,6 +13,7 @@ class DownloadVideoThread(QThread):
     url = ""
     download_progress = pyqtSignal(dict)
     format = None
+    audio_only = False
 
     def __init__(self):
         """
@@ -39,7 +40,6 @@ class DownloadVideoThread(QThread):
         :rtype: None
         """
         self.download_progress.emit(progress)
-        return True
 
     def generate_output_template(self):
         return os.curdir + '/PyTDownloader/%(title)s.%(ext)s'
@@ -52,10 +52,11 @@ class DownloadVideoThread(QThread):
         :rtype: None
         """
         if self.url is not None:
+            format_string = self.format
             download_options = {
                 'outtmpl': self.generate_output_template(),
                 'quiet': True,
-                'format': self.format
+                'format': format_string
             }
             with youtube_dl.YoutubeDL(download_options) as ydl:
                 ydl.add_progress_hook(self.progress)

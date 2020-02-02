@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from app.models.downloadvideothread import DownloadVideoThread
 from app.models.github_api import GithubApi
 from app.models.info_thread import Info_Thread
+from app.models.sync_files_thread import SyncFilesThread
 
 
 class MainWindow(QMainWindow):
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
 
     quality_info_items = []
     url = None
+    files = []
 
     def __init__(self):
         """
@@ -39,21 +41,22 @@ class MainWindow(QMainWindow):
         self.info_thread = Info_Thread()
         self.info_thread.add_quality_item.connect(self.add_quality_item)
         self.info_thread.finished.connect(self.info_thread_finished)
+        self.sync_files_thread = SyncFilesThread()
+        self.sync_files_thread.files.connect(self.sync_files)
         self.download_video_thread = DownloadVideoThread()
         self.download_video_thread.download_progress.connect(self.download_progress)
         self.download_video_thread.finished.connect(self.download_finished)
         self.progressBar.setValue(0)
-        self.current_download_label.setText("")
-        self.download_speed_label.setText("")
-        self.download_size_label.setText("")
         self.download_pushButton.setEnabled(False)
         self.completed_downloads_listWidget.itemDoubleClicked.connect(self.list_item_clicked)
+        self.crawl_files()
         self.update_completed_download_list()
         self.github_api = GithubApi()
         if self.github_api.update_available() is True:
             QMessageBox.information(self, "Update verfügbar",
                                     "Es ist eine neue Version verfügbar: {0} <a href='{1}'>Zum Download</a>".format(
                                         self.github_api.last_release, self.github_api.release_url))
+        self.sync_files_thread.start()
 
     def setupUi(self, MainWindow):
         """
@@ -118,11 +121,24 @@ class MainWindow(QMainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "PyTDownloader"))
         self.label.setText(_translate("MainWindow", "Video-URL"))
         self.download_pushButton.setText(_translate("MainWindow", "Download"))
-        self.current_download_label.setText(_translate("MainWindow", "Aktuell:"))
+        self.current_download_label.setText(_translate("MainWindow", ""))
         self.label_2.setText(_translate("MainWindow", "Qualität"))
         self.current_download_label_2.setText(_translate("MainWindow", "Videos:"))
-        self.download_speed_label.setText(_translate("MainWindow", "TextLabel"))
-        self.download_size_label.setText(_translate("MainWindow", "TextLabel"))
+        self.download_speed_label.setText(_translate("MainWindow", ""))
+        self.download_size_label.setText(_translate("MainWindow", ""))
+
+    def crawl_files(self):
+        self.files.clear()
+        for entry in os.scandir(os.curdir + '/PyTDownloader'):
+            self.files.append(entry)
+
+    def sync_files(self, file_list):
+        length_difference = len(self.files) != len(file_list)
+        file_changed = len(list(set(self.files) - set(file_list))) > 0
+
+        if length_difference or file_changed:
+            self.crawl_files()
+            self.update_completed_download_list()
 
     def download_progress(self, progress_dict):
         """
@@ -153,7 +169,9 @@ class MainWindow(QMainWindow):
         if os.path.isdir(os.curdir + '/PyTDownloader') is False:
             os.mkdir(os.curdir + '/PyTDownloader')
 
-        for entry in os.scandir(os.curdir + '/PyTDownloader'):
+        self.completed_downloads_listWidget.clear()
+
+        for entry in self.files:
             if entry.is_file():
                 list_item = QtWidgets.QListWidgetItem()
                 list_item.setText(entry.name)
@@ -237,4 +255,7 @@ class MainWindow(QMainWindow):
             self.progressBar.setValue(0)
             self.download_video_thread.format = self.quality_comboBox.currentData()
             self.download_video_thread.url = self.url
+
+            if self.quality_comboBox.currentData() == "tiny":
+                self.download_video_thread.audio_only = True
             self.download_video_thread.start()

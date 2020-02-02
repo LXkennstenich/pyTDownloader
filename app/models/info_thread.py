@@ -7,7 +7,7 @@ class Info_Thread(QThread):
     thread for fetching information about a video
 
     """
-    
+
     url = ""
     add_quality_item = pyqtSignal(str, str)
 
@@ -29,8 +29,8 @@ class Info_Thread(QThread):
 
     def run(self):
         """
-        fetches information about the video and creates listwidget-items and emits a
-        signal to tell the mainwindow to add the item to the listwidget
+        fetches information about the video and emits a
+        signal to the mainwindow
 
         :return: None
         :rtype: None
@@ -46,10 +46,22 @@ class Info_Thread(QThread):
             if key == "formats":
                 format_list = info_list[key]
                 for format_dict in format_list:
+                    audio_only = False
                     quality_string = None
                     if format_dict["format_note"] == "tiny":
-                        quality_string = "Audio Only - " + format_dict["ext"]
+                        quality_string = "Audio Only - " + str(format_dict["ext"]) + " | A-Codec: " + str(format_dict[
+                                                                                                              "acodec"]) + " | ASR: " + str(
+                            format_dict["asr"]) + " kHz " + " | TBR: " + str(format_dict["tbr"])
+                        audio_only = True
                     elif format_dict["fps"] is not None:
-                        quality_string = format_dict["format_note"] + " - " + format_dict["ext"]
+                        quality_string = format_dict["format_note"] + " - " + format_dict["ext"] + " | FPS: " + \
+                                         str(format_dict["fps"])
                     if quality_string is not None:
-                        self.add_quality_item.emit(quality_string, format_dict["format_id"])
+
+                        quality_string += " | Filesize: " + str(round(format_dict["filesize"] / 1000000.0, 2)) + " MB"
+
+                        if audio_only is True:
+                            format_string = format_dict["format_id"]
+                        else:
+                            format_string = format_dict["format_id"] + "+bestaudio"
+                        self.add_quality_item.emit(quality_string, format_string)
