@@ -27,7 +27,7 @@ class GithubApi:
         :rtype: bool
         """
         try:
-            self.repo = self.github.get_repo("LXkennstenich/pyTDownloader")
+            self.repo = self.github.get_repo("LXkennstenich/PyQt_YTDownloader")
             paginated_list = self.repo.get_releases()
             if paginated_list.totalCount > 0:
                 for release in paginated_list:

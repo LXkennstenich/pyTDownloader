@@ -42,7 +42,7 @@ class DownloadVideoThread(QThread):
         self.download_progress.emit(progress)
 
     def generate_output_template(self):
-        return os.curdir + '/PyTDownloader/%(title)s.%(ext)s'
+        return os.curdir + '/PyQt_YTDownloader/%(title)s.%(ext)s'
 
     def run(self):
         """

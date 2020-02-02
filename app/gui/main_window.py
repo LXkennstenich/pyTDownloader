@@ -118,7 +118,7 @@ class MainWindow(QMainWindow):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "PyTDownloader"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "PyQt_YTDownloader"))
         self.label.setText(_translate("MainWindow", "Video-URL"))
         self.download_pushButton.setText(_translate("MainWindow", "Download"))
         self.current_download_label.setText(_translate("MainWindow", ""))
@@ -128,8 +128,11 @@ class MainWindow(QMainWindow):
         self.download_size_label.setText(_translate("MainWindow", ""))
 
     def crawl_files(self):
+        if os.path.isdir(os.curdir + './PyQt_YTDownloader') is False:
+            os.mkdir(os.curdir + '/PyQt_YTDownloader')
+
         self.files.clear()
-        for entry in os.scandir(os.curdir + '/PyTDownloader'):
+        for entry in os.scandir(os.curdir + '/PyQt_YTDownloader'):
             self.files.append(entry)
 
     def sync_files(self, file_list):
@@ -161,13 +164,11 @@ class MainWindow(QMainWindow):
 
     def update_completed_download_list(self):
         """
-        scans the pyTDownloader directory for videos and appends it to our listwidget
+        scans the PyQt_YTDownloader directory for videos and appends it to our listwidget
 
         :return: None
         :rtype: None
         """
-        if os.path.isdir(os.curdir + '/PyTDownloader') is False:
-            os.mkdir(os.curdir + '/PyTDownloader')
 
         self.completed_downloads_listWidget.clear()
 
@@ -188,7 +189,7 @@ class MainWindow(QMainWindow):
         :return: None
         :rtype: None
         """
-        webbrowser.open('file://' + os.path.abspath('./PyTDownloader/'))
+        webbrowser.open('file://' + os.path.abspath('./PyQt_YTDownloader/'))
 
     def download_finished(self):
         """

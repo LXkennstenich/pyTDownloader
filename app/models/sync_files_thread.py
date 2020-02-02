@@ -33,7 +33,7 @@ class SyncFilesThread(QThread):
     def run(self):
         while True:
             self.file_list.clear()
-            for entry in os.scandir(os.curdir + '/PyTDownloader'):
+            for entry in os.scandir(os.curdir + '/PyQt_YTDownloader'):
                 self.file_list.append(entry)
             self.files.emit(self.file_list)
             sleep(1)
