@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         self.download_size_label.setText(_translate("MainWindow", ""))
 
     def crawl_files(self):
-        if os.path.isdir(os.curdir + './PyQt_YTDownloader') is False:
+        if os.path.isdir(os.curdir + '/PyQt_YTDownloader') is False:
             os.mkdir(os.curdir + '/PyQt_YTDownloader')
 
         self.files.clear()
