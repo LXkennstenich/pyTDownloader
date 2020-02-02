@@ -24,12 +24,12 @@ and the application starts.
 Download the [executable File](https://github.com/LXkennstenich/PyQt_YTDownloader/releases) (PyQt_YTDownloader.exe) and run it.
 
 
-## New Features
+# New Features
 
 For new features simply create a [feature request](https://github.com/LXkennstenich/PyQt_YTDownloader/issues/new) and choose the feature label.
 Try to explain exactly as possible what kind of new feature you want to have to be implemented.
 
 # Bugs
 
-If you find bugs please submit a [bugreport](https://github.com/LXkennstenich/PyQt_YTDownloader/issues/new). Choose the Bug label and try to descripe what you have done and on which system the problem accurs.
+If you find bugs please submit a [bugreport](https://github.com/LXkennstenich/PyQt_YTDownloader/issues/new). Choose the Bug label and try to descripe what you have done and on which system the problem occurs.
 
