@@ -3,7 +3,7 @@ chardet==3.0.4
 Deprecated==1.2.7
 idna==2.8
 PyGithub==1.45
-PyJWT==1.7.1
+PyJWT==2.4.0
 PyQt5==5.13.1
 PyQt5-sip==12.7.1
 PyQt5-stubs==5.13.1.4
